@@ -8,7 +8,7 @@ Multiplication Quiz Game using drag and drop features, built in HTML, CSS and JS
 4. Dark Mode
 5. Responsive Layout
 
-#### Preview Image
-[Preview Image](./assets/preview-img.png)
+### Preview Image
+<img src="./assets/preview-img.png" alt="Preview Image" width=360>
 
-[Click here](link here) to preview the project.
+[Click here](https://dnd-multiplication-game.glitch.me) to preview the project.
