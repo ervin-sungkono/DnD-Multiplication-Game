@@ -21,6 +21,7 @@ updateScore = () => {
 updateScore();
 
 computeScore = () => {
+    alert(`Your Final Score: ${score}`);
     if(score > highScore) {
         highScore = score;
         highScoreText.innerHTML = `Highscore: ${highScore}`;
@@ -34,21 +35,8 @@ computeScore = () => {
 getRandomNumber = (number) => {return Math.floor(Math.random() * number) + 1;}
 let firstNumber, secondNumber, resultNumber;
 const question = _id('question');
-const optionBox = _id('options-wrapper');
+const optionList = _class('option');
 const answerBox = _id('answer-box');
-
-const srcDict = {
-    1: "./assets/answer-1.svg",
-    2: "./assets/answer-2.svg",
-    3: "./assets/answer-3.svg",
-    4: "./assets/answer-4.svg",
-    5: "./assets/answer-5.svg",
-    6: "./assets/answer-6.svg",
-    7: "./assets/answer-7.svg",
-    8: "./assets/answer-8.svg",
-    9: "./assets/answer-9.svg",
-    10: "./assets/answer-10.svg"
-};
 
 let valueDict = {
     "number1": 1,
@@ -65,32 +53,22 @@ let valueDict = {
 
 const numberArray = [1,2,3,4,5,6,7,8,9,10];
 setOptions = () => {
-    optionBox.innerHTML = "";
     let shuffledArray = [...numberArray].sort(() => Math.random() - 0.5);
     const index = shuffledArray.findIndex(number => number === firstNumber);
     if(index >= 3) shuffledArray.splice(Math.random() * 3, 0, firstNumber);
     shuffledArray = shuffledArray.slice(0,3);
-
-    const parentNode = document.createElement('div');
-    parentNode.setAttribute("class","option");
  
-    shuffledArray.forEach((number) => {
-        const cloneParentNode = parentNode.cloneNode(false);
-        const childNode = document.createElement('img');
-
-        childNode.setAttribute("src",srcDict[number]);
-        childNode.setAttribute("alt",`Number ${number}`);
-        childNode.setAttribute("id",`number${number}`);
-        childNode.setAttribute("draggable",false);
-
-        cloneParentNode.appendChild(childNode);
-        optionBox.appendChild(cloneParentNode);
+    Array.from(optionList).forEach((option, index) => {
+        if(!shuffledArray.includes(index + 1)){
+            option.style.display = 'none';
+        }else{
+            option.style.display = 'block';
+        }
     });
     setEventListener();
 }
 
 disableOptions = (activeElement) => {
-    const optionList = _class('option');
     Array.from(optionList).forEach((el) => {
         const option = el.firstElementChild;
         if(option.id != activeElement.id){
@@ -144,8 +122,10 @@ setLives = () => {
     };
 }
 
+let isSubmitting = false;
 const gameCard = document.querySelector('#game-section .game-card');
 computeAnswer = () => {
+    isSubmitting = true;
     if(answerBox.value == 0) return;
     if(answerBox.value == resultNumber) {
         score++;
@@ -155,8 +135,8 @@ computeAnswer = () => {
     }
     else{
         if(--livesRemaining === 0) {
-            computeScore();
             gameOverSound.play();
+            computeScore();
             setTimeout(setLives, 2000);
         }
         else{
@@ -174,6 +154,7 @@ computeAnswer = () => {
         gameCard.classList.remove('correct','wrong','active','fade-out');
         gameCard.classList.add('fade-in');
         setTimeout(() => gameCard.classList.remove('fade-in'),1000);
+        isSubmitting = false;
     },3000);
 }
 const clearButton = _id('clear-btn');
@@ -218,6 +199,7 @@ function pointerEnd(element){
 }
 
 function pointerStart(e){
+    if(isSubmitting) return;
     e.preventDefault();
 
     const element = e.target.cloneNode(false);
@@ -246,6 +228,7 @@ function pointerStart(e){
 }
 
 function mobilePointerStart(e){
+    if(isSubmitting) return;
     e.preventDefault();
 
     const element = e.targetTouches[0].target.cloneNode(false);
@@ -290,34 +273,23 @@ function setEventListener(){
 
 // Volume Functions
 const volumeButton = _id('volume-icon');
+const muteButton = _id('volume-mute-icon');
 const volumeSlider = _id('volume-slider');
 
-const mutedVolumeSVG = 
-    `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M2.66699 18.6666C2.66699 21.3333 4.00033 22.6666 6.66699 22.6666H9.33366" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M20.0003 11.16V9.88C20.0003 5.90667 17.2403 4.38667 13.8803 6.49334L9.98699 8.93334C9.56033 9.18667 9.06699 9.33334 8.57366 9.33334H6.66699C4.00033 9.33334 2.66699 10.6667 2.66699 13.3333" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M13.8799 25.5067C17.2399 27.6134 19.9999 26.0801 19.9999 22.1201V17.2667" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M25.08 12.5601C26.28 15.4267 25.92 18.7734 24 21.3334" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M27.7065 22.6666C27.3465 23.36 26.9331 24.0266 26.4531 24.6666" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M28.2002 10.4C29.3069 13.0267 29.6002 15.9067 29.0802 18.6667" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M29.3337 2.66663L2.66699 29.3333" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>`
-const volumeSVG = 
-    `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20.0003 9.88C20.0003 5.90667 17.2403 4.38667 13.8803 6.49334L9.98699 8.93334C9.56033 9.18667 9.06699 9.33334 8.57366 9.33334H6.66699C4.00033 9.33334 2.66699 10.6667 2.66699 13.3333V18.6667C2.66699 21.3333 4.00033 22.6667 6.66699 22.6667H8.57366C9.06699 22.6667 9.56033 22.8133 9.98699 23.0667L13.8803 25.5067C17.2403 27.6133 20.0003 26.08 20.0003 22.12V15.2933" stroke="#2B2B2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M24 10.6667C26.3733 13.8267 26.3733 18.1734 24 21.3334" stroke="#2B2B2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M26.4404 24.6667C28.3738 22.0933 29.3338 19.0533 29.3338 16" stroke="#2B2B2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M26.4404 7.33331C27.2271 8.37331 27.8404 9.49331 28.3071 10.6666" stroke="#2B2B2B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>`
 let isMute = false;
 
 let volumeLevel = 1;
 const soundLibrary = [correctSound, wrongSound, gameOverSound];
 
 handleVolume = () => {
-    isMute = volumeLevel === 0 ? true : false;
-    volumeButton.innerHTML = isMute ? mutedVolumeSVG : volumeSVG;
-    volumeLevel = isMute ? 1 : 0;
+    isMute = (volumeLevel === 0) ? true : false;
+    if(isMute){
+        muteButton.style.display = 'block';
+        volumeButton.style.display = 'none';
+    }else{
+        volumeButton.style.display = 'block'
+        muteButton.style.display = 'none';
+    }
 }
 
 setVolume = () => {
@@ -339,7 +311,8 @@ showVolumeSlider = () => {
     timeout = setTimeout(() => volumeSlider.style.display = 'none', 1000);
 }
 
-volumeButton.addEventListener('click',showVolumeSlider);
+volumeButton.addEventListener('click', showVolumeSlider);
+muteButton.addEventListener('click', showVolumeSlider);
 
 // Show and Hide Info Box
 const overlay = _id('overlay');

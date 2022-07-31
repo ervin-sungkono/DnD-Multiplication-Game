@@ -265,13 +265,14 @@ img{
 }
 
 #game-section .game-card.active::after{
-    animation: spread 1s ease-in-out forwards;
+    animation: spread 1.6s ease-in-out forwards;
 }
 
 @keyframes spread{
     100%{
-        width: 160vw;
-        height: 160vw;
+        width: 150vw;
+        height: 150vw;
+        opacity: 0;
     }
 }
 
