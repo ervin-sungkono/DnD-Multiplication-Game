@@ -126,7 +126,10 @@ let isSubmitting = false;
 const gameCard = document.querySelector('#game-section .game-card');
 computeAnswer = () => {
     isSubmitting = true;
-    if(answerBox.value == 0) return;
+    if(answerBox.value == 0) {
+        isSubmitting = false;
+        return;
+    }
     if(answerBox.value == resultNumber) {
         score++;
         updateScore();
@@ -316,6 +319,7 @@ muteButton.addEventListener('click', showVolumeSlider);
 
 // Show and Hide Info Box
 const overlay = _id('overlay');
+const infoBox = _id('info-box');
 const infoButton = _id('info-icon');
 const closeButton = _id('close-btn');
 
