@@ -174,8 +174,8 @@ detectTouchEnd = (x1, y1, x2, y2, w, h) => {
 }
 
 function pointerEnd(element){
-    const pageX = parseInt(element.style.left);
-    const pageY = parseInt(element.style.top);
+    const pageX = parseFloat(element.style.left);
+    const pageY = parseFloat(element.style.top);
     const box = dropzone.getBoundingClientRect();
     element.removeAttribute('style');
 
@@ -187,7 +187,7 @@ function pointerEnd(element){
     
     const parentNode = document.createElement('div');
     parentNode.setAttribute("class","answer");
-    if(detectTouchEnd(box.left, box.top, pageX, pageY, dropzone.offsetWidth, dropzone.offsetHeight)){
+    if(detectTouchEnd(box.left, box.top + window.pageYOffset, pageX, pageY, dropzone.offsetWidth, dropzone.offsetHeight)){
         const cloneParentNode = parentNode.cloneNode(false);
         cloneParentNode.appendChild(element.cloneNode(false));
         if(answerList.length === 0){
